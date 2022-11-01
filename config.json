@@ -1,0 +1,103 @@
+{
+  "name": "leapwork",
+  "viewName": "Leapwork",
+  "type": "executer",
+  "main": "app.js",
+  "execProgram": "node",
+  "exposeRoute": false,
+  "imgUrl": "logo.png",
+  "version": "2.0.0",
+  "description": "This plugin integrates with Leapwork Testing solution.",
+  "category": [
+    "Testing"
+  ],
+  "keywords": [
+    "leapwork",
+    "plugin",
+    "kaholo",
+    "test"
+  ],
+  "auth": {
+    "authId": "leapworkAccount",
+    "params": [
+      {
+        "name": "leapworkURL",
+        "viewName": "Leapwork URL",
+        "type": "string",
+        "required": true,
+        "placeholder": "https://fdc0-27-5-237-61.in.ngrok.io:443",
+        "description": "Leapwork controller URL along with port if required",
+        "learnUrl": "https://www.leapwork.com/product/documentation/rest-api"
+      },
+      {
+        "name": "accessKey",
+        "viewName": "Access Key",
+        "type": "vault",
+        "required": true,
+        "placeholder": "ThiSiSJu5taTest.",
+        "description": "Leapwork REST API Access Key",
+        "learnUrl": "https://www.leapwork.com/product/documentation/administration/api-access-keys"
+      },
+      {
+        "name": "timeout",
+        "viewName": "Timeout",
+        "type": "string",
+        "required": true,
+        "default": "6000",
+        "description": "Scheduler Timeout in seconds. Scheduler will be stopped automatically when the timeout is reached. [Default - 100 minutes]"
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "runScheduler",
+      "viewName": "Run Scheduler",
+      "params": [
+        {
+          "name": "id",
+          "viewName": "Select Scheduler",
+          "description": "Select from the list of available Leapwork schedulers.",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listSchedulers",
+          "required": true
+        },
+        {
+          "name": "variables",
+          "viewName": "Variables",
+          "type": "string",
+          "required": false,
+          "description": "Pass in optional variables.",
+          "placeholder": "var1=val1&var2=val2",
+          "learnUrl": "https://www.leapwork.com/product/documentation/rest-api/v4/run-schedule-now"
+        }
+      ]
+    },
+    {
+      "name": "checkActiveLicense",
+      "viewName": "Check Active License",
+      "params": [
+        {
+          "name": "checkExpiry",
+          "viewName": "Check Expiry?",
+          "type": "boolean",
+          "description": "Checks if the license is expired",
+          "default": true
+        }
+      ]
+    },
+    {
+      "name": "runCurl",
+      "viewName": "Run Curl Command",
+      "params": [
+        {
+          "name": "command",
+          "viewName": "Curl Command",
+          "type": "string",
+          "description": "Enter the curl command to run",
+          "default": "curl -X GET --header 'Accept: application/json' --header 'AccessKey: EamQu0G5aiKe7oa8' 'https://561e-27-4-99-136.in.ngrok.io:443/api/v4/agents' "
+        }
+      ]
+    }
+  ]
+}
