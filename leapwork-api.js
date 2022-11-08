@@ -55,7 +55,7 @@ async function runCurl(params) {
   const newCommand = `${command} -s`;
   let result = await execCommand(newCommand);
   try {
-    return await eval(result.replace(/\$id/g, 'id'));
+    return await JSON.parse(result.replace(/\$id/g, 'id'));
   } catch (e) {
     return result;
   }
