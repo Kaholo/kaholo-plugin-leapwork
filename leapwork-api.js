@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { postScheduler, waitForSchedulerToEnd, getSchedulerResult, getActiveLicense, execCommand, filterId } = require("./helpers");
+const { postScheduler, waitForSchedulerToEnd, getSchedulerResult, getActiveLicense, execCommand, getItemIds, groupItems } = require("./helpers");
 
 async function runScheduler(params) {
   const {
@@ -50,6 +50,42 @@ async function checkActiveLicense(params) {
   }
 }
 
+async function getRunItemIds(params) {
+  const {
+    leapworkURL,
+    accessKey,
+    runId
+  } = params;
+
+  if (!leapworkURL.startsWith("http")) {
+    throw new Error("Please specify the full url of Leapwork starting from http:// or https://");
+  }
+  if (!accessKey) {
+    throw new Error("No Access Key was provided. Please provide a access key by following: https://www.leapwork.com/product/documentation/administration/api-access-keys.");
+  }
+  const result = await getItemIds(leapworkURL, accessKey, runId);
+  console.log(`\nResponse: ${JSON.stringify(result)}\n`);
+  return result;
+}
+
+async function getRunItems(params) {
+  const {
+    leapworkURL,
+    accessKey,
+    runItemId
+  } = params;
+
+  if (!leapworkURL.startsWith("http")) {
+    throw new Error("Please specify the full url of Leapwork starting from http:// or https://");
+  }
+  if (!accessKey) {
+    throw new Error("No Access Key was provided. Please provide a access key by following: https://www.leapwork.com/product/documentation/administration/api-access-keys.");
+  }
+  const result = await groupItems(leapworkURL, accessKey, runItemId);
+  console.log(`\nResponse: ${JSON.stringify(result)}\n`);
+  return result;
+}
+
 async function runCurl(params) {
   const { command } = params;
   const newCommand = `${command} -s`;
@@ -64,5 +100,7 @@ async function runCurl(params) {
 module.exports = {
   runScheduler,
   checkActiveLicense,
+  getRunItemIds,
+  getRunItems,
   runCurl
 };

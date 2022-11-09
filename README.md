@@ -41,6 +41,20 @@ This method gets the [active](https://www.leapwork.com/product/documentation/res
 Required parameters have an asterisk (*) next to their names.
 * Check Expiry? * (toggle) - Checks if the license is expired
 
+## Method: Get Run Item Ids
+This method gets the run Item Ids
+
+### Parameters
+Required parameters have an asterisk (*) next to their names.
+* runId * - Run Id (Available within the output of 'Run Scheduler' Method)
+
+## Method: Get Run Items
+This method gets the run Item
+
+### Parameters
+Required parameters have an asterisk (*) next to their names.
+* Run Item Id (Object) * - RunItemIds Object is available within the output of 'Get Run Item Ids' Method.
+
 ## Method: Run Curl Command
 This method runs any leapwork curl command present within the [API](https://www.leapwork.com/product/documentation/rest-api/v4/endpoints) documentation.
 

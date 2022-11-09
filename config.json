@@ -87,6 +87,35 @@
       ]
     },
     {
+      "name": "getRunItemIds",
+      "viewName": "Get Run Item Ids",
+      "params": [
+        {
+          "name": "runId",
+          "viewName": "Run Id",
+          "type": "string",
+          "description": "Run Id (Available within the output of 'Run Scheduler' Method)",
+          "required": true,
+          "placeholder": "ec210bfe-8615-45aa-b484-bdeb2a243dfd"
+        }
+      ]
+    },
+    {
+      "name": "getRunItems",
+      "viewName": "Get Run Items",
+      "params": [
+        {
+          "name": "runItemId",
+          "viewName": "Run Item Id (Object)",
+          "type": "string",
+          "parserType": "object",
+          "description": "RunItemIds Object (Available within the output of 'Get Run Item Ids' Method)",
+          "required": true,
+          "placeholder": "kaholo.actions.leapwork2.result.RunItemIds"
+        }
+      ]
+    },
+    {
       "name": "runCurl",
       "viewName": "Run Curl Command",
       "params": [

@@ -170,6 +170,64 @@ async function getActiveLicense(leapworkURL, accessKey) {
     }
 }
 
+async function getItemIds(leapworkURL, accessKey, runId) {
+    const config = {
+        method: "get",
+        url: `${leapworkURL}/api/v4/run/${runId}/runItemIds`,
+        headers: {
+            Accept: "application/json",
+            AccessKey: accessKey,
+        },
+    };
+
+    try {
+        console.log(JSON.stringify(config).replaceAll(accessKey, "HIDDEN"))
+        const { data } = await axios(config);
+        var filteredData = filterId(data);
+        return filteredData;
+    } catch (error) {
+        if (error.response.status) {
+            throw new Error(`Status Code: ${error.response.status}, Run Error: ${error.response.statusText}`);
+        }
+        if (error.message) {
+            throw new Error(error.message);
+        }
+    }
+}
+
+async function getItems(leapworkURL, accessKey, id) {
+    const config = {
+        method: "get",
+        url: `${leapworkURL}/api/v4/runItems/${id}`,
+        headers: {
+            Accept: "application/json",
+            AccessKey: accessKey,
+        },
+    };
+
+    try {
+        console.log(JSON.stringify(config).replaceAll(accessKey, "HIDDEN"))
+        const { data } = await axios(config);
+        var filteredData = filterId(data);
+        return filteredData;
+    } catch (error) {
+        if (error.response.status) {
+            throw new Error(`Status Code: ${error.response.status}, Run Error: ${error.response.statusText}`);
+        }
+        if (error.message) {
+            throw new Error(error.message);
+        }
+    }
+}
+
+async function groupItems(leapworkURL, accessKey, runItemId) {
+    const array = [];
+    for (const id of runItemId) {
+        result = await getItems(leapworkURL, accessKey, id)
+        array.push(result);
+    }
+    return array;
+}
 
 async function execCommand(command) {
     return new Promise((resolve, reject) => {
@@ -196,5 +254,7 @@ module.exports = {
     getSchedulerResult,
     getActiveLicense,
     execCommand,
-    filterId
+    filterId,
+    getItemIds,
+    groupItems
 };
