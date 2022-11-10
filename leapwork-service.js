@@ -1,6 +1,10 @@
 const { default: axios } = require("axios");
+const pickBy = require("lodash.pickby");
 
 const { delay } = require("./helpers");
+
+const DEFAULT_DELAY_TIME = 1000;
+const DEFAULT_MAX_TIMEOUT = 10;
 
 // https://www.leapwork.com/product/documentation/rest-api/v4/get-active-licenses
 async function getActiveLicense(leapworkUrl, accessKey) {
@@ -10,8 +14,9 @@ async function getActiveLicense(leapworkUrl, accessKey) {
   });
 
   console.info(JSON.stringify(config).replaceAll(accessKey, "HIDDEN"));
+
   const { data } = await axios(config).catch(handleLeapworkApiError);
-  return filterOutIdKeys(data);
+  return filterOutValuesWithId(data);
 }
 
 // https://www.leapwork.com/product/documentation/rest-api/v4/stop-schedule-by-schedule-id
@@ -37,32 +42,42 @@ async function getSchedulerResult(leapworkUrl, accessKey, runId) {
   });
 
   const { data } = await axios(config).catch(handleLeapworkApiError);
-  return filterOutIdKeys(data);
+  return filterOutValuesWithId(data);
 }
 
 // https://www.leapwork.com/product/documentation/rest-api/v4/get-schedule-run-status
-async function waitForSchedulerToEnd(leapworkUrl, accessKey, id, timeout) {
+async function waitForSchedulerToEnd(params, passedMaxCallsNumber) {
+  const {
+    leapworkUrl,
+    accessKey,
+    id,
+    timeout,
+  } = params;
+
+  // (timeout (in seconds) * 1000) / delay time (in miliseconds) = number of max recursive calls
+  const maxCallsNumber = passedMaxCallsNumber ?? (
+    ((timeout ?? DEFAULT_MAX_TIMEOUT) * 1000) / DEFAULT_DELAY_TIME
+  );
+
   const config = generateApiRequestConfig({
     url: `${leapworkUrl}/api/v4/schedules/${id}/status`,
     accessKey,
   });
 
-  const MAX = (parseInt(timeout, 10) || 10) / 2;
-  let tried = 0;
-  let res;
-  // TODO: refactor this loop to recursive function
-  do {
-    /* eslint-disable no-await-in-loop, no-plusplus */
-    res = await axios(config).catch(handleLeapworkApiError);
-    console.warn("#", tried++, res.data.Status);
-    await delay(5000);
+  const { data: statusData } = await axios(config).catch(handleLeapworkApiError);
+  console.warn(`#${maxCallsNumber}`, statusData.Status);
 
-    if (tried === MAX) {
-      const status = await stopScheduler(leapworkUrl, accessKey, id);
-      throw new Error(`Scheduler timed out! Scheduler stopped status true/false: ${status}`);
-    }
-    /* eslint-enable */
-  } while (res.data.Status !== "Finished" && tried < MAX);
+  if (statusData.Status === "Finished") {
+    return statusData;
+  }
+
+  if (maxCallsNumber <= 0) {
+    const status = await stopScheduler(leapworkUrl, accessKey, id);
+    throw new Error(`Scheduler timed out! Scheduler stopped status true/false: ${status}`);
+  }
+
+  await delay(DEFAULT_DELAY_TIME);
+  return waitForSchedulerToEnd(params, maxCallsNumber - 1);
 }
 
 // https://www.leapwork.com/product/documentation/rest-api/v4/run-schedule-now
@@ -74,6 +89,7 @@ async function postScheduler(leapworkUrl, accessKey, id, variables) {
   });
 
   console.info(JSON.stringify(config).replaceAll(accessKey, "HIDDEN"));
+
   const { data } = await axios(config).catch(handleLeapworkApiError);
   return data.RunId;
 }
@@ -89,16 +105,16 @@ async function getSchedulers(leapworkUrl, accessKey) {
   return data;
 }
 
-async function getItemIds(leapworkURL, accessKey, runId) {
+async function getItemIds(leapworkUrl, accessKey, runId) {
   const config = generateApiRequestConfig({
-    url: `${leapworkURL}/api/v4/run/${runId}/runItemIds`,
+    url: `${leapworkUrl}/api/v4/run/${runId}/runItemIds`,
     accessKey,
   });
 
   console.info(JSON.stringify(config).replaceAll(accessKey, "HIDDEN"));
 
   const { data } = await axios(config).catch(handleLeapworkApiError);
-  return filterOutIdKeys(data);
+  return filterOutValuesWithId(data);
 }
 
 async function getItems(leapworkUrl, accessKey, id) {
@@ -110,7 +126,7 @@ async function getItems(leapworkUrl, accessKey, id) {
   console.info(JSON.stringify(config).replaceAll(accessKey, "HIDDEN"));
 
   const { data } = await axios(config).catch(handleLeapworkApiError);
-  return filterOutIdKeys(data);
+  return filterOutValuesWithId(data);
 }
 
 async function groupItems(leapworkUrl, accessKey, runItemIds) {
@@ -119,8 +135,8 @@ async function groupItems(leapworkUrl, accessKey, runItemIds) {
   );
 }
 
-function filterOutIdKeys(data) {
-  return JSON.parse(JSON.stringify(data), (k, v) => (k === "$id" ? undefined : v));
+function filterOutValuesWithId(data) {
+  return pickBy(data, (_, key) => key !== "$id");
 }
 
 function handleLeapworkApiError(error) {

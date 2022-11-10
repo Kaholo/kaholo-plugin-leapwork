@@ -16,7 +16,12 @@ async function runScheduler(params) {
   leapworkService.validateLeapworkUrl(leapworkUrl);
 
   const runId = await leapworkService.postScheduler(leapworkUrl, accessKey, id, variables);
-  await leapworkService.waitForSchedulerToEnd(leapworkUrl, accessKey, id, timeout);
+  await leapworkService.waitForSchedulerToEnd({
+    leapworkUrl,
+    accessKey,
+    id,
+    timeout,
+  });
   return leapworkService.getSchedulerResult(leapworkUrl, accessKey, runId);
 }
 
@@ -32,14 +37,14 @@ async function checkActiveLicense(params) {
   const license = await leapworkService.getActiveLicense(leapworkUrl, accessKey);
   console.info(`\nResponse: ${JSON.stringify(license)}\n`);
 
-  if (checkExpiry) {
-    if (license[0].ExpireDays > 0) {
-      return `License expires in ${license[0].ExpireDays} days!`;
-    }
-    throw new Error("License expired!");
-  } else {
+  if (!checkExpiry) {
     return license;
   }
+
+  if (license[0].ExpireDays > 0) {
+    return `License expires in ${license[0].ExpireDays} days!`;
+  }
+  throw new Error("License expired!");
 }
 
 async function runCurl(params) {
@@ -49,9 +54,8 @@ async function runCurl(params) {
   const { stdout: result } = await execCommand(newCommand);
 
   try {
-    // eslint-disable-next-line no-eval
     return await JSON.parse(result.replace(/\$id/g, "id"));
-  } catch (e) {
+  } catch {
     return result;
   }
 }
