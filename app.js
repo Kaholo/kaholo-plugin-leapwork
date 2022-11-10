@@ -50,7 +50,7 @@ async function runCurl(params) {
 
   try {
     // eslint-disable-next-line no-eval
-    return await eval(result.replace(/\$id/g, "id"));
+    return await JSON.parse(result.replace(/\$id/g, "id"));
   } catch (e) {
     return result;
   }
