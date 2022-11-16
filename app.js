@@ -41,8 +41,8 @@ async function checkActiveLicense(params) {
     return license;
   }
 
-  if (license[0].ExpireDays > 0) {
-    return `License expires in ${license[0].ExpireDays} days!`;
+  if (license.ExpireDays > 0) {
+    return `License expires in ${license.ExpireDays} days!`;
   }
   throw new Error("License expired!");
 }

@@ -16,7 +16,8 @@ async function getActiveLicense(leapworkUrl, accessKey) {
   console.info(JSON.stringify(config).replaceAll(accessKey, "HIDDEN"));
 
   const { data } = await axios(config).catch(handleLeapworkApiError);
-  return filterOutValuesWithId(data);
+  const [license] = filterOutValuesWithId(data);
+  return license;
 }
 
 // https://www.leapwork.com/product/documentation/rest-api/v4/stop-schedule-by-schedule-id
