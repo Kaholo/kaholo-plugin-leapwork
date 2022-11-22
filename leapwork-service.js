@@ -1,5 +1,4 @@
-const { default: axios } = require("axios");
-const pickBy = require("lodash.pickby");
+const axios = require("axios");
 
 const { delay } = require("./helpers");
 
@@ -132,12 +131,12 @@ async function getItems(leapworkUrl, accessKey, id) {
 
 async function groupItems(leapworkUrl, accessKey, runItemIds) {
   return Promise.all(
-    Object.keys(runItemIds).map((id) => getItems(leapworkUrl, accessKey, id)),
+    Object.values(runItemIds).map((id) => getItems(leapworkUrl, accessKey, id)),
   );
 }
 
 function filterOutValuesWithId(data) {
-  return pickBy(data, (_, key) => key !== "$id");
+  return JSON.parse(JSON.stringify(data), (k, v) => (k === "$id" ? undefined : v));
 }
 
 function handleLeapworkApiError(error) {
