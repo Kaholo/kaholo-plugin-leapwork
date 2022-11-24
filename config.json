@@ -21,7 +21,7 @@
     "authId": "leapworkAccount",
     "params": [
       {
-        "name": "leapworkURL",
+        "name": "leapworkUrl",
         "viewName": "Leapwork URL",
         "type": "string",
         "required": true,
@@ -34,7 +34,6 @@
         "viewName": "Access Key",
         "type": "vault",
         "required": true,
-        "placeholder": "ThiSiSJu5taTest.",
         "description": "Leapwork REST API Access Key",
         "learnUrl": "https://www.leapwork.com/product/documentation/administration/api-access-keys"
       },
@@ -106,7 +105,7 @@
       "params": [
         {
           "name": "runItemId",
-          "viewName": "Run Item Id (Object)",
+          "viewName": "Run Item Ids (Object)",
           "type": "string",
           "parserType": "object",
           "description": "RunItemIds Object (Available within the output of 'Get Run Item Ids' Method)",
@@ -124,7 +123,7 @@
           "viewName": "Curl Command",
           "type": "string",
           "description": "Enter the curl command to run",
-          "default": "curl -X GET --header 'Accept: application/json' --header 'AccessKey: EamQu0G5aiKe7oa8' 'https://561e-27-4-99-136.in.ngrok.io:443/api/v4/agents' "
+          "placeholder": "curl -X GET --header 'Accept: application/json' --header 'AccessKey: EamQu0G5aiKe7oa8' 'https://561e-27-4-99-136.in.ngrok.io:443/api/v4/agents' "
         }
       ]
     }
