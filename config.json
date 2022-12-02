@@ -6,7 +6,7 @@
   "execProgram": "node",
   "exposeRoute": false,
   "imgUrl": "logo.png",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "This plugin integrates with Leapwork Testing solution.",
   "category": [
     "Testing"
