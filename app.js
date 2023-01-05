@@ -1,5 +1,4 @@
-const { bootstrap } = require("@kaholo/plugin-library");
-
+const { bootstrap, parsers } = require("@kaholo/plugin-library");
 const leapworkService = require("./leapwork-service");
 const autocomplete = require("./autocomplete");
 const { execCommand } = require("./helpers");
@@ -15,7 +14,9 @@ async function runScheduler(params) {
 
   leapworkService.validateLeapworkUrl(leapworkUrl);
 
-  const runId = await leapworkService.postScheduler(leapworkUrl, accessKey, id, variables);
+  const varsObj = variables ? parsers.keyValuePairs(variables) : {};
+
+  const runId = await leapworkService.postScheduler(leapworkUrl, accessKey, id, varsObj);
   await leapworkService.waitForSchedulerToEnd({
     leapworkUrl,
     accessKey,

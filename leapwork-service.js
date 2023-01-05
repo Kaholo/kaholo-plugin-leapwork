@@ -81,10 +81,12 @@ async function waitForSchedulerToEnd(params, passedMaxCallsNumber) {
 }
 
 // https://www.leapwork.com/product/documentation/rest-api/v4/run-schedule-now
-async function postScheduler(leapworkUrl, accessKey, id, variables) {
+async function postScheduler(leapworkUrl, accessKey, id, varsObj) {
+  // new URLSearchParams(obj).toString();
+  const varsUrlParams = new URLSearchParams(varsObj);
   const config = generateApiRequestConfig({
     method: "put",
-    url: `${leapworkUrl}/api/v4/schedules/${id}/runNow?${variables}`,
+    url: `${leapworkUrl}/api/v4/schedules/${id}/runNow?${varsUrlParams}`,
     accessKey,
   });
 
