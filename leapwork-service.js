@@ -12,7 +12,7 @@ async function getActiveLicense(leapworkUrl, accessKey) {
     accessKey,
   });
 
-  console.error(JSON.stringify(config).replaceAll(accessKey, "HIDDEN") + "\n");
+  console.error(`${JSON.stringify(config).replaceAll(accessKey, "HIDDEN")}\n`);
 
   const { data } = await axios(config).catch(handleLeapworkApiError);
   const [license] = filterOutValuesWithId(data);
@@ -90,7 +90,7 @@ async function postScheduler(leapworkUrl, accessKey, id, varsObj) {
     accessKey,
   });
 
-  console.error(JSON.stringify(config).replaceAll(accessKey, "HIDDEN") + "\n");
+  console.error(`${JSON.stringify(config).replaceAll(accessKey, "HIDDEN")}\n`);
 
   const { data } = await axios(config).catch(handleLeapworkApiError);
   return data.RunId;
@@ -113,7 +113,7 @@ async function getItemIds(leapworkUrl, accessKey, runId) {
     accessKey,
   });
 
-  console.error(JSON.stringify(config).replaceAll(accessKey, "HIDDEN") + "\n");
+  console.error(`${JSON.stringify(config).replaceAll(accessKey, "HIDDEN")}\n`);
 
   const { data } = await axios(config).catch(handleLeapworkApiError);
   return filterOutValuesWithId(data);
@@ -125,7 +125,7 @@ async function getItems(leapworkUrl, accessKey, id) {
     accessKey,
   });
 
-  console.error(JSON.stringify(config).replaceAll(accessKey, "HIDDEN") + "\n");
+  console.error(`${JSON.stringify(config).replaceAll(accessKey, "HIDDEN")}\n`);
 
   const { data } = await axios(config).catch(handleLeapworkApiError);
   return filterOutValuesWithId(data);

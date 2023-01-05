@@ -41,10 +41,10 @@ async function checkActiveLicense(params) {
   if (!checkExpiry) {
     return license;
   }
-
   if (license.ExpireDays > 0) {
     return `License expires in ${license.ExpireDays} days!`;
   }
+
   throw new Error("License expired!");
 }
 
@@ -53,10 +53,11 @@ async function runCurl(params) {
 
   const newCommand = `${command} -s`;
   const result = await execCommand(newCommand);
-  if(result.stdout=="" && result.stderr=="") {
+  if (result.stdout === "" && result.stderr === "") {
     console.error("Curl command succeeded but nothing was returned - possibly a typo in the URL's path?");
-    return;
+    return null;
   }
+
   try {
     return JSON.parse(result.stdout.replace(/\$id/g, "id"));
   } catch {
