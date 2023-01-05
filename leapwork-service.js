@@ -142,10 +142,10 @@ function filterOutValuesWithId(data) {
 }
 
 function handleLeapworkApiError(error) {
-  if (error.response.data) {
+  if (error.response?.data) {
     throw new Error(error.response.data);
   }
-  if (error.response.status) {
+  if (error.response?.status) {
     throw new Error(`Status Code: ${error.response.status}, Scheduler Error: ${error.response.statusText}`);
   }
   throw error;
