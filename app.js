@@ -77,7 +77,6 @@ async function getRunItemIds(params) {
   leapworkService.validateLeapworkUrl(leapworkUrl);
 
   const result = await leapworkService.getItemIds(leapworkUrl, accessKey, runId);
-  console.info(`\nResponse: ${JSON.stringify(result)}\n`);
   return result;
 }
 
@@ -91,7 +90,6 @@ async function getRunItems(params) {
   leapworkService.validateLeapworkUrl(leapworkUrl);
 
   const result = await leapworkService.groupItems(leapworkUrl, accessKey, runItemId);
-  console.info(`\nResponse: ${JSON.stringify(result)}\n`);
   return result;
 }
 
