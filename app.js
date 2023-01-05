@@ -54,7 +54,8 @@ async function runCurl(params) {
   const newCommand = `${command} -s`;
   const result = await execCommand(newCommand);
   if(result.stdout=="" && result.stderr=="") {
-    throw new Error("Curl command succeeded but nothing was returned - possibly a typo in the URL's path?");
+    console.error("Curl command succeeded but nothing was returned - possibly a typo in the URL's path?");
+    return;
   }
   try {
     return JSON.parse(result.stdout.replace(/\$id/g, "id"));
