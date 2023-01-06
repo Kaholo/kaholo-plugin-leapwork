@@ -64,10 +64,10 @@
         {
           "name": "variables",
           "viewName": "Variables",
-          "type": "string",
+          "type": "text",
           "required": false,
-          "description": "Pass in optional variables.",
-          "placeholder": "var1=val1&var2=val2",
+          "description": "Optional key=value Leapwork Run List variables, one pair per line",
+          "placeholder": "environment=test&user=testuser",
           "learnUrl": "https://www.leapwork.com/product/documentation/rest-api/v4/run-schedule-now"
         }
       ]
