@@ -3,7 +3,7 @@ const leapworkService = require("./leapwork-service");
 const autocomplete = require("./autocomplete");
 const { execCommand } = require("./helpers");
 
-async function runScheduler(params) {
+async function runSchedule(params) {
   const {
     leapworkUrl,
     accessKey,
@@ -95,7 +95,7 @@ async function getRunItems(params) {
 }
 
 module.exports = bootstrap({
-  runScheduler,
+  runSchedule,
   checkActiveLicense,
   getRunItemIds,
   getRunItems,
