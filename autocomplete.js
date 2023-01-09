@@ -1,6 +1,6 @@
 const leapworkService = require("./leapwork-service");
 
-async function listSchedulers(query, params) {
+async function listSchedules(query, params) {
   const {
     leapworkUrl,
     accessKey,
@@ -30,5 +30,5 @@ function filterAutocompleteItemsByQuery(autocompleteItems, query) {
 }
 
 module.exports = {
-  listSchedulers,
+  listSchedules,
 };

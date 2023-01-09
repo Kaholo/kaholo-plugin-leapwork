@@ -12,7 +12,7 @@ async function getActiveLicense(leapworkUrl, accessKey) {
     accessKey,
   });
 
-  console.info(JSON.stringify(config).replaceAll(accessKey, "HIDDEN"));
+  console.error(`${JSON.stringify(config).replaceAll(accessKey, "HIDDEN")}\n`);
 
   const { data } = await axios(config).catch(handleLeapworkApiError);
   const [license] = filterOutValuesWithId(data);
@@ -81,14 +81,16 @@ async function waitForSchedulerToEnd(params, passedMaxCallsNumber) {
 }
 
 // https://www.leapwork.com/product/documentation/rest-api/v4/run-schedule-now
-async function postScheduler(leapworkUrl, accessKey, id, variables) {
+async function postScheduler(leapworkUrl, accessKey, id, varsObj) {
+  // new URLSearchParams(obj).toString();
+  const varsUrlParams = new URLSearchParams(varsObj);
   const config = generateApiRequestConfig({
     method: "put",
-    url: `${leapworkUrl}/api/v4/schedules/${id}/runNow?${variables}`,
+    url: `${leapworkUrl}/api/v4/schedules/${id}/runNow?${varsUrlParams}`,
     accessKey,
   });
 
-  console.info(JSON.stringify(config).replaceAll(accessKey, "HIDDEN"));
+  console.error(`${JSON.stringify(config).replaceAll(accessKey, "HIDDEN")}\n`);
 
   const { data } = await axios(config).catch(handleLeapworkApiError);
   return data.RunId;
@@ -111,7 +113,7 @@ async function getItemIds(leapworkUrl, accessKey, runId) {
     accessKey,
   });
 
-  console.info(JSON.stringify(config).replaceAll(accessKey, "HIDDEN"));
+  console.error(`${JSON.stringify(config).replaceAll(accessKey, "HIDDEN")}\n`);
 
   const { data } = await axios(config).catch(handleLeapworkApiError);
   return filterOutValuesWithId(data);
@@ -123,7 +125,7 @@ async function getItems(leapworkUrl, accessKey, id) {
     accessKey,
   });
 
-  console.info(JSON.stringify(config).replaceAll(accessKey, "HIDDEN"));
+  console.error(`${JSON.stringify(config).replaceAll(accessKey, "HIDDEN")}\n`);
 
   const { data } = await axios(config).catch(handleLeapworkApiError);
   return filterOutValuesWithId(data);
@@ -140,10 +142,10 @@ function filterOutValuesWithId(data) {
 }
 
 function handleLeapworkApiError(error) {
-  if (error.response.data) {
+  if (error.response?.data) {
     throw new Error(error.response.data);
   }
-  if (error.response.status) {
+  if (error.response?.status) {
     throw new Error(`Status Code: ${error.response.status}, Scheduler Error: ${error.response.statusText}`);
   }
   throw error;

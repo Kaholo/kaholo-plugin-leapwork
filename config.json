@@ -6,16 +6,24 @@
   "execProgram": "node",
   "exposeRoute": false,
   "imgUrl": "logo.png",
-  "version": "2.0.0",
-  "description": "This plugin integrates with Leapwork Testing solution.",
+  "version": "2.1.0",
+  "description": "Leapwork is end-to-end test automation.",
   "category": [
     "Testing"
   ],
   "keywords": [
     "leapwork",
+    "studio",
+    "agent",
+    "controller",
     "plugin",
-    "kaholo",
-    "test"
+    "scheduler",
+    "end-to-end",
+    "testing",
+    "run item id",
+    "run list",
+    "flows",
+    "curl"
   ],
   "auth": {
     "authId": "leapworkAccount",
@@ -25,8 +33,8 @@
         "viewName": "Leapwork URL",
         "type": "string",
         "required": true,
-        "placeholder": "https://fdc0-27-5-237-61.in.ngrok.io:443",
-        "description": "Leapwork controller URL along with port if required",
+        "placeholder": "http://10.60.27.38:9001/",
+        "description": "Leapwork controller URL, including port to access REST API",
         "learnUrl": "https://www.leapwork.com/product/documentation/rest-api"
       },
       {
@@ -34,7 +42,7 @@
         "viewName": "Access Key",
         "type": "vault",
         "required": true,
-        "description": "Leapwork REST API Access Key",
+        "description": "Leapwork API Access Key",
         "learnUrl": "https://www.leapwork.com/product/documentation/administration/api-access-keys"
       },
       {
@@ -43,45 +51,32 @@
         "type": "string",
         "required": true,
         "default": "6000",
-        "description": "Scheduler Timeout in seconds. Scheduler will be stopped automatically when the timeout is reached. [Default - 100 minutes]"
+        "description": "Scheduler Timeout in seconds, the amount of time allowed for the run list to run to completion"
       }
     ]
   },
   "methods": [
     {
-      "name": "runScheduler",
-      "viewName": "Run Scheduler",
+      "name": "runSchedule",
+      "viewName": "Run Schedule",
       "params": [
         {
           "name": "id",
-          "viewName": "Select Scheduler",
-          "description": "Select from the list of available Leapwork schedulers.",
+          "viewName": "Schedule",
+          "description": "Select schedule by title from list of Leapwork schedules. If coded use Id instead of Title.",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "listSchedulers",
-          "required": true
+          "functionName": "listSchedules",
+          "required": true,
+          "learnUrl": "https://www.leapwork.com/product/documentation/rest-api/v4/run-schedule-now"
         },
         {
           "name": "variables",
           "viewName": "Variables",
-          "type": "string",
+          "description": "Optional key=value Leapwork Run List variables, one pair per line",
+          "type": "text",
           "required": false,
-          "description": "Pass in optional variables.",
-          "placeholder": "var1=val1&var2=val2",
-          "learnUrl": "https://www.leapwork.com/product/documentation/rest-api/v4/run-schedule-now"
-        }
-      ]
-    },
-    {
-      "name": "checkActiveLicense",
-      "viewName": "Check Active License",
-      "params": [
-        {
-          "name": "checkExpiry",
-          "viewName": "Check Expiry?",
-          "type": "boolean",
-          "description": "Checks if the license is expired",
-          "default": true
+          "placeholder": "environment=test\nuser=testuser"
         }
       ]
     },
@@ -93,7 +88,7 @@
           "name": "runId",
           "viewName": "Run Id",
           "type": "string",
-          "description": "Run Id (Available within the output of 'Run Scheduler' Method)",
+          "description": "RunId as returned in output of 'Run Schedule' method",
           "required": true,
           "placeholder": "ec210bfe-8615-45aa-b484-bdeb2a243dfd"
         }
@@ -108,9 +103,9 @@
           "viewName": "Run Item Ids (Object)",
           "type": "string",
           "parserType": "object",
-          "description": "RunItemIds Object (Available within the output of 'Get Run Item Ids' Method)",
+          "description": "RunItemIds Object as returned in output of 'Get Run Item Ids' method",
           "required": true,
-          "placeholder": "kaholo.actions.leapwork2.result.RunItemIds"
+          "placeholder": "[\"34ba3ed4-2a88-4fdf-8d16-d0942030aece\", \"922874ad-f5d7-4c84-aeb3-4890e46cc602\"]"
         }
       ]
     },
@@ -122,8 +117,21 @@
           "name": "command",
           "viewName": "Curl Command",
           "type": "string",
-          "description": "Enter the curl command to run",
-          "placeholder": "curl -X GET --header 'Accept: application/json' --header 'AccessKey: EamQu0G5aiKe7oa8' 'https://561e-27-4-99-136.in.ngrok.io:443/api/v4/agents' "
+          "description": "The curl command to run",
+          "placeholder": "curl -o leapworkvid.mp4 -X GET --header 'Accept: application/octet-stream' --header 'AccessKey: 5A0XDCzVzK03WVr4' 'http://10.60.27.38:9001/api/v4/runItems/245ea20c-2192-45ce-ada6-791948f5aa7c/video'"
+        }
+      ]
+    },
+    {
+      "name": "checkActiveLicense",
+      "viewName": "Check Active License",
+      "params": [
+        {
+          "name": "checkExpiry",
+          "viewName": "Simple Message",
+          "type": "boolean",
+          "description": "Returns only a simple message such as \"License expires in 12 days\"",
+          "default": false
         }
       ]
     }
